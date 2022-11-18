@@ -14,12 +14,11 @@ I will focus on some tutorials to build a data lake from scratch which will be i
 - [How to build a data lake from scratch — Part 2: Connecting the components](https://medium.com/towards-data-science/how-to-build-a-data-lake-from-scratch-part-2-connecting-the-components-1bc659cb3f4f)
 
 # Tools
+
 <p align="center">
-<a href="https://nifi.apache.org/"><img width="140" height="100" src="https://nifi.apache.org/assets/images/apache-nifi-logo.svg">Apache NiFi</a>
-<a href="https://nifi.apache.org/registry"><img width="140" height="100" src="https://nifi.apache.org/assets/images/registry-logo.png">Apache NiFi Registry</a>
-<a href="https://airflow.apache.org/"><img width="140" height="100" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/AirflowLogo.png/800px-AirflowLogo.png?20191014185111">Apache Airflow</a>
-<a href="https://www.postgresql.org/"><img width="140" height="100" src="https://www.postgresql.org/media/img/about/press/elephant.png">PostrgreSQL</a>
-<a href="https://www.pgadmin.org/">pgAdmin</a>
-<a href="https://min.io/"><img width="140" height="100" src="https://min.io/resources/img/logo.svg">MinIO</a>
-<a href="https://www.docker.com/"><img width="140" height="100" src="https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png">Docker</a>
+<a href="https://dagster.io/">dagster</a>
+<a href="https://min.io/">MinIO</a>
+<a href="https://www.docker.com/">Docker</a>
+<a href="https://trino.io/">trino</a>
+<a href="https://atlas.apache.org/#/">Apache Atlas</a>
 </p>
