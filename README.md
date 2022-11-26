@@ -12,13 +12,10 @@ I will focus on some tutorials to build a data lake from scratch which will be i
 
 - [How to build a data lake from scratch — Part 1: The setup](https://towardsdatascience.com/how-to-build-a-data-lake-from-scratch-part-1-the-setup-34ea1665a06e)
 - [How to build a data lake from scratch — Part 2: Connecting the components](https://medium.com/towards-data-science/how-to-build-a-data-lake-from-scratch-part-2-connecting-the-components-1bc659cb3f4f)
+- [How to Build a Modern Data Lake with MinIO](https://medium.com/codex/how-to-build-a-modern-data-lake-with-minio-db0455eec053)
+- [Intro to Trino for the trinewbie](https://www.starburst.io/blog/intro-to-trino-for-the-trinewbie/)
 
 # Tools
 
-<p align="center">
-<a href="https://dagster.io/">dagster</a>
-<a href="https://min.io/">MinIO</a>
-<a href="https://www.docker.com/">Docker</a>
-<a href="https://trino.io/">trino</a>
-<a href="https://atlas.apache.org/#/">Apache Atlas</a>
-</p>
+## Stack 1
+<a href="https://dagster.io/">dagster</a> + <a href="https://min.io/">MinIO</a> + <a href="https://www.docker.com/">Docker</a> + <a href="https://trino.io/">trino</a>

@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+  minio:
+    image: 'bitnami/minio:2022'
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ROOT_USER: minio-root-user
+      MINIO_ROOT_PASSWORD: minio-root-password
+    volumes:
+      - /minio/data:/data
+
+  trino:
+    image: "trinodb/trino:403"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./trino/etc:/usr/lib/trino/etc:ro
+      - ./trino/catalog:/etc/trino/catalog
+
+  # This job will create the "datalake" bucket on Minio
+  mc-job:
+    image: 'minio/mc:RELEASE.2022-05-09T04-08-26Z'
+    entrypoint: |
+      /bin/bash -c "
+      sleep 5;
+      /usr/bin/mc config --quiet host add myminio http://minio:9000 minio-root-user minio-root-password;
+      /usr/bin/mc mb --quiet myminio/datalake
+      "
+    depends_on:
+      - minio

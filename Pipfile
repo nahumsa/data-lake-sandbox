@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 minio = "*"
 pandas = "*"
+boto3 = "*"
+awswrangler = "*"
+pydantic = {extras = ["dotenv"], version = "*"}
 
 [dev-packages]
 
