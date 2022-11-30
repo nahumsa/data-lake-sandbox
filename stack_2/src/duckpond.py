@@ -51,22 +51,6 @@ def sql_to_string(s: SQL) -> str:
     replacements = {}
 
     for key, value in s.bindings.items():
-        # Convert to a unique identifier
-        # if isinstance(value, pd.DataFrame):
-        #     replacements[key] = f"df_{id(value)}"
-        # # Convert recursively to string
-        # elif isinstance(value, SQL):
-        #     replacements[key] = f"({sql_to_string(value)})"
-        # # Use sqlescapy to conver safely
-        # elif isinstance(value, str):
-        #     replacements[key] = f"'{sqlescape(value)}'"
-        # # Stringify other types
-        # elif isinstance(value, (int, float, bool)):
-        #     replacements[key] = str(value)
-        # elif value is None:
-        #     replacements[key] = "null"
-        # else:
-        #     raise ValueError(f"Invalid type for {key}")
 
         match value:
             case pd.DataFrame():
