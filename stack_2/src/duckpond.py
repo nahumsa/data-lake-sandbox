@@ -6,6 +6,8 @@ from sqlescapy import sqlescape
 
 from typing import Mapping
 
+from dagster import IOManager
+
 class SQL:
     def __init__(self, sql: str, **bindings: any):
         self.sql = sql
@@ -49,37 +51,36 @@ def sql_to_string(s: SQL) -> str:
     replacements = {}
 
     for key, value in s.bindings.items():
-        # TODO: Change for a match case
         # Convert to a unique identifier
-        if isinstance(value, pd.DataFrame):
-            replacements[key] = f"df_{id(value)}"
-        # Convert recursively to string
-        elif isinstance(value, SQL):
-            replacements[key] = f"({sql_to_string(value)})"
-        # Use sqlescapy to conver safely
-        elif isinstance(value, str):
-            replacements[key] = f"'{sqlescape(value)}'"
-        # Stringify other types
-        elif isinstance(value, (int, float, bool)):
-            replacements[key] = str(value)
-        elif value is None:
-            replacements[key] = "null"
-        else:
-            raise ValueError(f"Invalid type for {key}")
+        # if isinstance(value, pd.DataFrame):
+        #     replacements[key] = f"df_{id(value)}"
+        # # Convert recursively to string
+        # elif isinstance(value, SQL):
+        #     replacements[key] = f"({sql_to_string(value)})"
+        # # Use sqlescapy to conver safely
+        # elif isinstance(value, str):
+        #     replacements[key] = f"'{sqlescape(value)}'"
+        # # Stringify other types
+        # elif isinstance(value, (int, float, bool)):
+        #     replacements[key] = str(value)
+        # elif value is None:
+        #     replacements[key] = "null"
+        # else:
+        #     raise ValueError(f"Invalid type for {key}")
 
-        # match value:
-        #     case pd.DataFrame:
-        #         replacements[key] = f"df_{id(value)}"
-        #     case SQL:
-        #         replacements[key] = f"({sql_to_string(value)})"
-        #     case str:
-        #         replacements[key] = f"'{sqlescape(value)}'"
-        #     case (int, float, bool):
-        #         replacements[key] = str(value)
-        #     case None:
-        #         replacements[key] = "null"
-        #     case _:
-        #         raise ValueError(f"Invalid type for {key}")
+        match value:
+            case pd.DataFrame():
+                replacements[key] = f"df_{id(value)}"
+            case SQL():
+                replacements[key] = f"({sql_to_string(value)})"
+            case str():
+                replacements[key] = f"'{sqlescape(value)}'"
+            case int() | float() | bool():
+                replacements[key] = str(value)
+            case None:
+                replacements[key] = "null"
+            case _:
+                raise ValueError(f"Invalid type for {key}")
 
 
     return Template(s.sql).safe_substitute(replacements)
@@ -94,3 +95,35 @@ def collect_dataframes(s: SQL) -> Mapping[str, pd.DataFrame]:
             dataframes.update(collect_dataframes(value))
 
     return dataframes
+
+
+class DuckPondIOManager(IOManager):
+    def __init__(self, bucket_name: str, duckdb: DuckDB, prefix=""):
+        self.bucket_name = bucket_name
+        self.duckdb = duckdb
+        self.prefix = prefix
+
+    def _get_s3_url(self, context) -> str:
+
+        if context.has_asset_key:
+            asset_id = context.get_asset_identifier()
+
+        else:
+            asset_id = context.get_identifier()
+
+        return f"s3://{self.bucket_name}/{self.prefix}{'/'.join(asset_id)}.parquet"
+
+    def handle_output(self, context, select_statement: SQL):
+        if select_statement is None:
+            return
+
+        if not isinstance(select_statement, SQL):
+            raise ValueError(r"Expected asset to return a SQL, got {select_statement!r}")
+
+        self.duckdb.query(
+            SQL(
+                "copy $select_statement to $url (format parquet)",
+                select_statement=select_statement,
+                url=self._get_s3_url(context),
+            )
+        )
