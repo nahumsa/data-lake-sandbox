@@ -103,16 +103,37 @@ class DuckPondIOManager(IOManager):
         return f"s3://{self.bucket_name}/{self.prefix}{'/'.join(asset_id)}.parquet"
 
     def handle_output(self, context, select_statement: SQL):
-        if select_statement is None:
-            return
+        """Stores software defined assets to the data lake.
 
-        if not isinstance(select_statement, SQL):
-            raise ValueError(r"Expected asset to return a SQL, got {select_statement!r}")
+        Args:
+            context (_type_): _description_
+            select_statement (SQL): Statment to store to the data lake.
 
-        self.duckdb.query(
-            SQL(
-                "copy $select_statement to $url (format parquet)",
-                select_statement=select_statement,
-                url=self._get_s3_url(context),
-            )
+        Raises:
+            ValueError: When receiving a select statement that is not SQL.
+
+        Returns:
+            None: None when the select statement is None
+        """
+        match select_statement:
+            case None:
+                return
+
+            case SQL():
+                self.duckdb.query(
+                                    SQL(
+                                        "copy $select_statement to $url (format parquet)",
+                                        select_statement=select_statement,
+                                        url=self._get_s3_url(context),
+                                    )
+                                )
+
+            # Catch any object that is not None or SQL
+            case _:
+                raise ValueError(r"Expected asset to return a SQL, got {select_statement!r}")
+
+
+    def load_input(self, context) -> SQL:
+        return SQL(
+            "select * from read_parquet($url)", url=self._get_s3_url(context)
         )
