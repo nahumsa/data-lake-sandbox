@@ -73,10 +73,15 @@ def collect_dataframes(s: SQL) -> Mapping[str, pd.DataFrame]:
     dataframes = {}
 
     for _, value in s.bindings.items():
-        if isinstance(value, pd.DataFrame):
-            dataframes[f"df_{id(value)}"] = value
-        elif isinstance(value, SQL):
-            dataframes.update(collect_dataframes(value))
+        match value:
+            case pd.DataFrame():
+                dataframes[f"df_{id(value)}"] = value
+
+            case SQL():
+                dataframes.update(collect_dataframes(value))
+
+            case _:
+                raise ValueError(f"Unspected type {type(value)}")
 
     return dataframes
 
