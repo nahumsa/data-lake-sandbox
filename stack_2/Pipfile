@@ -4,18 +4,20 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+dagit = "*"
 dagster = "*"
-awscli = "*"
-duckdb = "*"
-localstack = "*"
-awscli-local = "*"
+setuptools = "*"
+pytest = "*"
 pandas = "*"
+duckdb = "*"
 sqlescapy = "*"
 lxml = "*"
 html5lib = "*"
 
 [dev-packages]
-pytest = "*"
+awscli-local = "*"
+awscli = "*"
+localstack = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.7"

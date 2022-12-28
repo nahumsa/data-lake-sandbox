@@ -2,7 +2,7 @@ from typing import Union
 import pytest
 import pandas as pd
 
-from src.duckpond import sql_to_string, SQL
+from jaffle.duckpond import sql_to_string, SQL
 
 
 class TestSQLToString:

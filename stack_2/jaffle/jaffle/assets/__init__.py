@@ -1,12 +1,12 @@
 from dagster import asset
-from src.duckpond import SQL
+from jaffle.duckpond import SQL
 import pandas as pd
 
 @asset
 def population() -> SQL:
     df = pd.read_html(
         "https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)"
-    )[1]
+    )[0]
 
     df.columns = [
         "country",

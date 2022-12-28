@@ -8,6 +8,8 @@ from typing import Mapping
 
 from dagster import IOManager
 
+from functools import partial
+
 class SQL:
     def __init__(self, sql: str, **bindings: any):
         self.sql = sql
@@ -51,20 +53,20 @@ def sql_to_string(s: SQL) -> str:
     replacements = {}
 
     for key, value in s.bindings.items():
+        check_value_instance = lambda x: isinstance(value, x)
 
-        match value:
-            case pd.DataFrame():
-                replacements[key] = f"df_{id(value)}"
-            case SQL():
-                replacements[key] = f"({sql_to_string(value)})"
-            case str():
-                replacements[key] = f"'{sqlescape(value)}'"
-            case int() | float() | bool():
-                replacements[key] = str(value)
-            case None:
-                replacements[key] = "null"
-            case _:
-                raise ValueError(f"Invalid type for {key}")
+        if check_value_instance(pd.DataFrame):
+            replacements[key] = f"df_{id(value)}"
+        elif check_value_instance(SQL):
+            replacements[key] = f"({sql_to_string(value)})"
+        elif check_value_instance(str):
+            replacements[key] = f"'{sqlescape(value)}'"
+        elif check_value_instance(int) or check_value_instance(float) or check_value_instance(bool):
+            replacements[key] = str(value)
+        elif value is None:
+            replacements[key] = "null"
+        else:
+            raise ValueError(f"Invalid type for {key}")
 
 
     return Template(s.sql).safe_substitute(replacements)
@@ -73,15 +75,13 @@ def collect_dataframes(s: SQL) -> Mapping[str, pd.DataFrame]:
     dataframes = {}
 
     for _, value in s.bindings.items():
-        match value:
-            case pd.DataFrame():
-                dataframes[f"df_{id(value)}"] = value
-
-            case SQL():
-                dataframes.update(collect_dataframes(value))
-
-            case _:
-                raise ValueError(f"Unspected type {type(value)}")
+        check_value_instance = lambda x: isinstance(value, x)
+        if check_value_instance(pd.DataFrame):
+            dataframes[f"df_{id(value)}"] = value
+        elif check_value_instance(SQL):
+            dataframes.update(collect_dataframes(value))
+        else:
+            raise ValueError(f"Unspected type {type(value)}")
 
     return dataframes
 
@@ -115,22 +115,20 @@ class DuckPondIOManager(IOManager):
         Returns:
             None: None when the select statement is None
         """
-        match select_statement:
-            case None:
-                return
+        check_select_statement_instance = lambda x: isinstance(select_statement, x)
 
-            case SQL():
-                self.duckdb.query(
-                                    SQL(
-                                        "copy $select_statement to $url (format parquet)",
-                                        select_statement=select_statement,
-                                        url=self._get_s3_url(context),
-                                    )
+        if select_statement is None:
+            return
+        elif check_select_statement_instance(SQL):
+            self.duckdb.query(
+                                SQL(
+                                    "copy $select_statement to $url (format parquet)",
+                                    select_statement=select_statement,
+                                    url=self._get_s3_url(context),
                                 )
-
-            # Catch any object that is not None or SQL
-            case _:
-                raise ValueError(r"Expected asset to return a SQL, got {select_statement!r}")
+                            )
+        else:
+            raise ValueError(r"Expected asset to return a SQL, got {select_statement!r}")
 
 
     def load_input(self, context) -> SQL:

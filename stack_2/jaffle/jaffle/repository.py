@@ -1,5 +1,6 @@
 from src.duckpond import DuckDB, DuckPondIOManager
-from dagster import resource, io_manager
+from dagster import resource, io_manager, Definitions, load_assets_from_package_module
+import assets
 
 @resource(config_schema={"vars": str})
 def duckdb(init_context):
@@ -19,5 +20,12 @@ duckdb_localstack = duckdb.configured(
         set s3_use_ssl='false';
         set s3_url_style='path';
         """
+    }
+)
+
+defs = Definitions(
+    assets=load_assets_from_package_module(assets),
+    resources={
+        "io_manager": DuckPondIOManager("datalake", DuckDB(duckdb_localstack))
     }
 )
