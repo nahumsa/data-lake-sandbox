@@ -1,4 +1,7 @@
 .venv/
 minio/
 .vscode/
+.terraform/
+.terraform.lock.hcl
+*tfstate
 __pycache__/

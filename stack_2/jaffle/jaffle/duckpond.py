@@ -8,7 +8,6 @@ from typing import Mapping
 
 from dagster import IOManager
 
-from functools import partial
 
 class SQL:
     def __init__(self, sql: str, **bindings: any):
