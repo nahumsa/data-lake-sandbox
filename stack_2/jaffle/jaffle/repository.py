@@ -11,6 +11,7 @@ def duckdb(init_context):
 def duckpond_io_manager(init_context):
     return DuckPondIOManager("datalake", init_context.resources.duckdb)
 
+# TODO: not saving to s3
 duckdb_localstack = duckdb.configured(
     {
         "vars": """
