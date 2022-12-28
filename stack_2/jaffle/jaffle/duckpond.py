@@ -79,8 +79,6 @@ def collect_dataframes(s: SQL) -> Mapping[str, pd.DataFrame]:
             dataframes[f"df_{id(value)}"] = value
         elif check_value_instance(SQL):
             dataframes.update(collect_dataframes(value))
-        else:
-            raise ValueError(f"Unspected type {type(value)}")
 
     return dataframes
 
@@ -118,16 +116,17 @@ class DuckPondIOManager(IOManager):
 
         if select_statement is None:
             return
-        elif check_select_statement_instance(SQL):
-            self.duckdb.query(
-                                SQL(
-                                    "copy $select_statement to $url (format parquet)",
-                                    select_statement=select_statement,
-                                    url=self._get_s3_url(context),
-                                )
-                            )
-        else:
+
+        if not check_select_statement_instance(SQL):
             raise ValueError(r"Expected asset to return a SQL, got {select_statement!r}")
+
+        self.duckdb.query(
+                            SQL(
+                                "copy $select_statement to $url (format parquet)",
+                                select_statement=select_statement,
+                                url=self._get_s3_url(context),
+                            )
+                        )
 
 
     def load_input(self, context) -> SQL:
