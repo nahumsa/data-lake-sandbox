@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0d039daa2ef6512418f37d239fe4dc6389719bc3abf24254d62b3fce343ee6b9"
+            "sha256": "8feffcf7bd4e580dab06517a279cf0bdcf6cc3328089bfd166a7e5b06ea9911e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -54,6 +54,22 @@
             ],
             "markers": "python_version >= '3.7' and python_version < '4.0'",
             "version": "==2.2.1"
+        },
+        "boto3": {
+            "hashes": [
+                "sha256:7319d89fd7f901eb6316398b2bffe3f719a483901c69705385ccff6f38feb291",
+                "sha256:9def744f663d556fc1d6222b8a4eebd426300ae2365cbeaa1d153b3e723b7156"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==1.26.39"
+        },
+        "botocore": {
+            "hashes": [
+                "sha256:3f48020d7d51bbd68e51c1fbf6ecac139579aa50378c0ca83d4f908313041be9",
+                "sha256:c8f7c8de902e42b71dbf7e2205a40a1aab8b1fb37342d8fdff198cc1610c39c7"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==1.29.39"
         },
         "certifi": {
             "hashes": [
@@ -442,11 +458,11 @@
         },
         "importlib-resources": {
             "hashes": [
-                "sha256:32bb095bda29741f6ef0e5278c42df98d135391bee5f932841efc0041f748dc3",
-                "sha256:c09b067d82e72c66f4f8eb12332f5efbebc9b007c0b6c40818108c9870adc363"
+                "sha256:7d543798b0beca10b6a01ac7cafda9f822c54db9e8376a6bf57e0cbd74d486b6",
+                "sha256:e4a96c8cc0339647ff9a5e0550d9f276fc5a01ffa276012b58ec108cfd7b8484"
             ],
             "markers": "python_version < '3.9'",
-            "version": "==5.10.1"
+            "version": "==5.10.2"
         },
         "iniconfig": {
             "hashes": [
@@ -462,6 +478,20 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==3.1.2"
+        },
+        "jmespath": {
+            "hashes": [
+                "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980",
+                "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==1.0.1"
+        },
+        "localstack-client": {
+            "hashes": [
+                "sha256:71124983d15418c90ec9a82c4bde0460b29c62896cd44527b4b3346f8d5f8a89"
+            ],
+            "version": "==1.39"
         },
         "lxml": {
             "hashes": [
@@ -927,6 +957,14 @@
             ],
             "version": "==0.10.1"
         },
+        "s3transfer": {
+            "hashes": [
+                "sha256:06176b74f3a15f61f1b4f25a1fc29a4429040b7647133a463da8fa5bd28d5ecd",
+                "sha256:2ed07d3866f523cc561bf4a00fc5535827981b117dd7876f036b0c1aca42c947"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==0.6.0"
+        },
         "setuptools": {
             "hashes": [
                 "sha256:57f6f22bde4e042978bcd50176fdb381d7c21a9efa4041202288d3737a0c6a54",
@@ -1021,6 +1059,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==0.9.0"
+        },
+        "terraform-local": {
+            "hashes": [
+                "sha256:d456980172eec6eded4249bf04871c0aa97f6e8495e60ecbc254fffe1e304f89"
+            ],
+            "index": "pypi",
+            "version": "==0.6"
         },
         "tomli": {
             "hashes": [
@@ -1353,11 +1398,11 @@
         },
         "awscli": {
             "hashes": [
-                "sha256:2ba5e1212c22b656cbf8313afbd20279e9c1318f76a89323c394ac9e8a24df85",
-                "sha256:4a3785056c1f77ef6c5dc64bf4d76a172b81210b6a977281de59f281e5551d4d"
+                "sha256:909fa8b177b80912ace98b5aa9be99c26d1ee677d8f4534976c8213a78c02e0d",
+                "sha256:92a98dc57ffa0be51c47339341b4445fd6dbf9259620691fa0ebae4dd9460e08"
             ],
             "index": "pypi",
-            "version": "==1.27.38"
+            "version": "==1.27.39"
         },
         "awscli-local": {
             "hashes": [
@@ -1368,19 +1413,19 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:5764d6401c2bec28d3fa565978d82ff35f4017b99e2d8625c7faac6a86cddd8c",
-                "sha256:ee787e36f1d02434eb5a757bba640f90663438f420bb06cd9f81ff30188ca65b"
+                "sha256:7319d89fd7f901eb6316398b2bffe3f719a483901c69705385ccff6f38feb291",
+                "sha256:9def744f663d556fc1d6222b8a4eebd426300ae2365cbeaa1d153b3e723b7156"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.26.38"
+            "version": "==1.26.39"
         },
         "botocore": {
             "hashes": [
-                "sha256:2b98c7da8668cdc022b4d8a56b50686454d0a10c11518702fde41881d20618b6",
-                "sha256:e22615f233a90dfeff4ec5a42df8c641d31125f8c9da26898cccbf869743a6bd"
+                "sha256:3f48020d7d51bbd68e51c1fbf6ecac139579aa50378c0ca83d4f908313041be9",
+                "sha256:c8f7c8de902e42b71dbf7e2205a40a1aab8b1fb37342d8fdff198cc1610c39c7"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.29.38"
+            "version": "==1.29.39"
         },
         "cachetools": {
             "hashes": [
@@ -1835,6 +1880,13 @@
                 "sha256:78d60f23a1b8a2d32f400b3c8c06b01142ac7841b75d8a1efcb33515877ba531"
             ],
             "version": "==0.4.1"
+        },
+        "terraform-local": {
+            "hashes": [
+                "sha256:d456980172eec6eded4249bf04871c0aa97f6e8495e60ecbc254fffe1e304f89"
+            ],
+            "index": "pypi",
+            "version": "==0.6"
         },
         "typing-extensions": {
             "hashes": [
