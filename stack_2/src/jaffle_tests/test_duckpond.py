@@ -13,8 +13,7 @@ class TestSQLToString:
 
     def test_sql(self):
         df = pd.DataFrame()
-        query = SQL("select * from $test",
-                     test=SQL("select * from $df", df=df))
+        query = SQL("select * from $test", test=SQL("select * from $df", df=df))
 
         assert sql_to_string(query) == f"select * from (select * from df_{id(df)})"
 
@@ -35,4 +34,3 @@ class TestSQLToString:
     def test_default(self):
         with pytest.raises(ValueError):
             _ = sql_to_string(SQL("select $none from df", none={}))
-

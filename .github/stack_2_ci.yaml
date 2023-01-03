@@ -1,0 +1,44 @@
+name: stack-2
+
+on:
+  push:
+    branches: [ main ]
+
+  pull_request:
+    branches: [ main ]
+
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.7]
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Build using Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Installing dependencies
+        run: |
+          python -m pip install pip --upgrade pip
+          pip install pipenv
+          cd stack_2/
+          pipenv install --dev
+
+      - name: Checking code style
+        run: |
+        pipenv run black --check --diff src/
+        pipenv run isort --check --diff --profile black src/
+        pipenv run pylint src/
+
+      - name: Running tests
+        run: pipenv run pytest --cov=./

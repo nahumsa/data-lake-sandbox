@@ -19,6 +19,9 @@ awscli = "*"
 localstack = "*"
 terraform-local = "*"
 pytest = "*"
+black = "*"
+isort = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.7"

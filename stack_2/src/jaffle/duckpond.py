@@ -14,9 +14,9 @@ class SQL:
         self.sql = sql
         self.bindings = bindings
 
-class DuckDB:
 
-    def __init__(self, options: str=""):
+class DuckDB:
+    def __init__(self, options: str = ""):
         self.options = options
 
     def query(self, select_statement: SQL) -> pd.DataFrame:
@@ -36,6 +36,7 @@ class DuckDB:
             return
 
         return result.df()
+
 
 def sql_to_string(s: SQL) -> str:
     """Convert SQL statements to SQL strings.
@@ -60,15 +61,19 @@ def sql_to_string(s: SQL) -> str:
             replacements[key] = f"({sql_to_string(value)})"
         elif check_value_instance(str):
             replacements[key] = f"'{sqlescape(value)}'"
-        elif check_value_instance(int) or check_value_instance(float) or check_value_instance(bool):
+        elif (
+            check_value_instance(int)
+            or check_value_instance(float)
+            or check_value_instance(bool)
+        ):
             replacements[key] = str(value)
         elif value is None:
             replacements[key] = "null"
         else:
             raise ValueError(f"Invalid type for {key}")
 
-
     return Template(s.sql).safe_substitute(replacements)
+
 
 def collect_dataframes(s: SQL) -> Mapping[str, pd.DataFrame]:
     dataframes = {}
@@ -118,18 +123,17 @@ class DuckPondIOManager(IOManager):
             return
 
         if not check_select_statement_instance(SQL):
-            raise ValueError(r"Expected asset to return a SQL, got {select_statement!r}")
+            raise ValueError(
+                r"Expected asset to return a SQL, got {select_statement!r}"
+            )
 
         self.duckdb.query(
-                            SQL(
-                                "copy $select_statement to $url (format parquet)",
-                                select_statement=select_statement,
-                                url=self._get_s3_url(context),
-                            )
-                        )
-
+            SQL(
+                "copy $select_statement to $url (format parquet)",
+                select_statement=select_statement,
+                url=self._get_s3_url(context),
+            )
+        )
 
     def load_input(self, context) -> SQL:
-        return SQL(
-            "select * from read_parquet($url)", url=self._get_s3_url(context)
-        )
+        return SQL("select * from read_parquet($url)", url=self._get_s3_url(context))

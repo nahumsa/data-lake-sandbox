@@ -2,6 +2,7 @@ from dagster import asset
 from jaffle.duckpond import SQL
 import pandas as pd
 
+
 @asset
 def population() -> SQL:
     df = pd.read_html(
@@ -21,6 +22,7 @@ def population() -> SQL:
         float(str(row).rstrip("%").replace("\u2212", "-")) for row in df["pop_change"]
     ]
     return SQL("select * from $df", df=df)
+
 
 @asset
 def continent_population(population: SQL) -> SQL:
