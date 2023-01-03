@@ -36,7 +36,10 @@ jobs:
 
       - name: Checking code style
         run: |
+          cd stack_2/
           make check_style
 
       - name: Running tests
-        run: make tests
+        run: |
+          cd stack_2/
+          make tests
