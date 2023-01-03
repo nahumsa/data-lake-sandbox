@@ -8,16 +8,28 @@ from sqlescapy import sqlescape
 
 
 class SQL:
+    """SQL wrapper"""
+
     def __init__(self, sql: str, **bindings: any):
         self.sql = sql
         self.bindings = bindings
 
 
 class DuckDB:
+    """Duckdb wrapper"""
+
     def __init__(self, options: str = ""):
         self.options = options
 
     def query(self, select_statement: SQL) -> pd.DataFrame:
+        """Query the duckdb instance
+
+        Args:
+            select_statement (SQL): select statement for the duckdb
+
+        Returns:
+            pd.DataFrame: result of the select statement
+        """
         # Create ephemeral DuckDB
         db_instance = duckdb.connect(":memory:")
         db_instance.query("install httpfs; load httpfs;")
@@ -31,7 +43,7 @@ class DuckDB:
         result = db_instance.query(sql_to_string(select_statement))
 
         if result is None:
-            return
+            return None
 
         return result.df()
 
@@ -51,19 +63,14 @@ def sql_to_string(sql_query: SQL) -> str:
     replacements = {}
 
     for key, value in sql_query.bindings.items():
-        check_value_instance = lambda x: isinstance(value, x)
 
-        if check_value_instance(pd.DataFrame):
+        if isinstance(value, pd.DataFrame):
             replacements[key] = f"df_{id(value)}"
-        elif check_value_instance(SQL):
+        elif isinstance(value, SQL):
             replacements[key] = f"({sql_to_string(value)})"
-        elif check_value_instance(str):
+        elif isinstance(value, str):
             replacements[key] = f"'{sqlescape(value)}'"
-        elif (
-            check_value_instance(int)
-            or check_value_instance(float)
-            or check_value_instance(bool)
-        ):
+        elif isinstance(value, (bool, float, int)):
             replacements[key] = str(value)
         elif value is None:
             replacements[key] = "null"
@@ -74,21 +81,30 @@ def sql_to_string(sql_query: SQL) -> str:
 
 
 def collect_dataframes(sql_query: SQL) -> Mapping[str, pd.DataFrame]:
+    """Collect dataframs from a sql query
+
+    Args:
+        sql_query (SQL): query
+
+    Returns:
+        Mapping[str, pd.DataFrame]: dict of dataframes
+    """
     dataframes = {}
 
     for _, value in sql_query.bindings.items():
-        check_value_instance = lambda x: isinstance(value, x)
 
-        if check_value_instance(pd.DataFrame):
+        if isinstance(value, pd.DataFrame):
             dataframes[f"df_{id(value)}"] = value
 
-        elif check_value_instance(SQL):
+        elif isinstance(value, SQL):
             dataframes.update(collect_dataframes(value))
 
     return dataframes
 
 
 class DuckPondIOManager(IOManager):
+    """IOManager for the duckpond"""
+
     def __init__(self, bucket_name: str, duckdb: DuckDB, prefix=""):
         self.bucket_name = bucket_name
         self.duckdb = duckdb
