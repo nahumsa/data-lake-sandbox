@@ -1,15 +1,16 @@
-from dagster import asset
-from jaffle.duckpond import SQL
 import pandas as pd
+from dagster import asset
+
+from jaffle.duckpond import SQL
 
 
 @asset
 def population() -> SQL:
-    df = pd.read_html(
+    pop_df = pd.read_html(
         "https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)"
     )[0]
 
-    df.columns = [
+    pop_df.columns = [
         "country",
         "continent",
         "subregion",
@@ -18,10 +19,11 @@ def population() -> SQL:
         "pop_change",
     ]
 
-    df["pop_change"] = [
-        float(str(row).rstrip("%").replace("\u2212", "-")) for row in df["pop_change"]
+    pop_df["pop_change"] = [
+        float(str(row).rstrip("%").replace("\u2212", "-"))
+        for row in pop_df["pop_change"]
     ]
-    return SQL("select * from $df", df=df)
+    return SQL("select * from $df", df=pop_df)
 
 
 @asset

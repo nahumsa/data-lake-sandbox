@@ -1,8 +1,7 @@
 from dagster import Definitions, load_assets_from_package_module
 
 from jaffle import assets
-
-from jaffle.duckpond import DuckPondIOManager, DuckDB
+from jaffle.duckpond import DuckDB, DuckPondIOManager
 
 DUCKDB_LOCAL_CONFIG = """
 set s3_access_key_id='test';

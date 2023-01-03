@@ -36,9 +36,7 @@ jobs:
 
       - name: Checking code style
         run: |
-        pipenv run black --check --diff src/
-        pipenv run isort --check --diff --profile black src/
-        pipenv run pylint src/
+          make check_style
 
       - name: Running tests
-        run: pipenv run pytest --cov=./
+        run: make tests

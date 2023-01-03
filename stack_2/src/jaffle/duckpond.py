@@ -1,12 +1,10 @@
-import pandas as pd
 from string import Template
-from duckdb import connect
-
-from sqlescapy import sqlescape
-
 from typing import Mapping
 
+import duckdb
+import pandas as pd
 from dagster import IOManager
+from sqlescapy import sqlescape
 
 
 class SQL:
@@ -21,16 +19,16 @@ class DuckDB:
 
     def query(self, select_statement: SQL) -> pd.DataFrame:
         # Create ephemeral DuckDB
-        db = connect(":memory:")
-        db.query("install httpfs; load httpfs;")
-        db.query(self.options)
+        db_instance = duckdb.connect(":memory:")
+        db_instance.query("install httpfs; load httpfs;")
+        db_instance.query(self.options)
 
         dataframes = collect_dataframes(select_statement)
 
         for key, value in dataframes.items():
-            db.register(key, value)
+            db_instance.register(key, value)
 
-        result = db.query(sql_to_string(select_statement))
+        result = db_instance.query(sql_to_string(select_statement))
 
         if result is None:
             return
@@ -38,11 +36,11 @@ class DuckDB:
         return result.df()
 
 
-def sql_to_string(s: SQL) -> str:
+def sql_to_string(sql_query: SQL) -> str:
     """Convert SQL statements to SQL strings.
 
     Args:
-        s (SQL): Object to convert to a sql string.
+        sql_query (SQL): Object to convert to a sql string.
 
     Raises:
         ValueError: If there's an invalid type for a value
@@ -52,7 +50,7 @@ def sql_to_string(s: SQL) -> str:
     """
     replacements = {}
 
-    for key, value in s.bindings.items():
+    for key, value in sql_query.bindings.items():
         check_value_instance = lambda x: isinstance(value, x)
 
         if check_value_instance(pd.DataFrame):
@@ -72,16 +70,18 @@ def sql_to_string(s: SQL) -> str:
         else:
             raise ValueError(f"Invalid type for {key}")
 
-    return Template(s.sql).safe_substitute(replacements)
+    return Template(sql_query.sql).safe_substitute(replacements)
 
 
-def collect_dataframes(s: SQL) -> Mapping[str, pd.DataFrame]:
+def collect_dataframes(sql_query: SQL) -> Mapping[str, pd.DataFrame]:
     dataframes = {}
 
-    for _, value in s.bindings.items():
+    for _, value in sql_query.bindings.items():
         check_value_instance = lambda x: isinstance(value, x)
+
         if check_value_instance(pd.DataFrame):
             dataframes[f"df_{id(value)}"] = value
+
         elif check_value_instance(SQL):
             dataframes.update(collect_dataframes(value))
 

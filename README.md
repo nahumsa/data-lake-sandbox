@@ -3,6 +3,8 @@
 <a href="https://github.com/nahumsa/data-lake-sandbox/actions"><img alt="Actions Status" src="https://github.com/nahumsa/data-lake-sandbox/workflows/ci/badge.svg"></a>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 <a href="https://pycqa.github.io/isort/"><img alt="Imports: isort" src="https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336"></a>
+<a href="https://github.com/PyCQA/pylint"><img alt="pylint" src="https://img.shields.io/badge/linting-pylint-yellowgreen"></a>
+
 </p>
 
 The main goal of this project is to create a sandbox in order to understand more about how to create and manage data lakes.

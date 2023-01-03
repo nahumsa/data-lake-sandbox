@@ -3,5 +3,6 @@ minio/
 .vscode/
 .terraform/
 .terraform.lock.hcl
+.coverage
 *tfstate
 __pycache__/
