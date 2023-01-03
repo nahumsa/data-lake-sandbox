@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+dagit = "*"
+dagster = "*"
+setuptools = "*"
+pandas = "*"
+duckdb = "*"
+sqlescapy = "*"
+lxml = "*"
+html5lib = "*"
+
+[dev-packages]
+awscli-local = "*"
+awscli = "*"
+localstack = "*"
+terraform-local = "*"
+pytest = "*"
+black = "*"
+isort = "*"
+pylint = "*"
+pytest-cov = "*"
+
+[requires]
+python_version = "3.7"
