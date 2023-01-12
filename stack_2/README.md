@@ -52,7 +52,6 @@ Since this is a "begginer" tutorial there aren't data lake management policies a
 # TODO
 
 - [ ] Add EC2 for dagster
-- [ ] Add CI
 
 # References
 
